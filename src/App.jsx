@@ -1,10 +1,10 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import * as XLSX from "xlsx";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
 import {
-  UploadCloud, CalendarClock, ChevronDown, ChevronRight, Search, RotateCcw, Wallet, AlertTriangle,
+  UploadCloud, CalendarClock, ChevronDown, ChevronRight, Search, RotateCcw, Wallet, AlertTriangle, Printer,
 } from "lucide-react";
 
 const COLORS = {
@@ -79,7 +79,7 @@ const inputStyle = {
 
 function Kpi({ icon, label, value, sub, tint }) {
   return (
-    <div style={{ flex: "1 1 200px", padding: 16, borderRadius: 12, border: `1px solid ${COLORS.border}`, background: "#fff" }}>
+    <div className="print-card" style={{ flex: "1 1 200px", padding: 16, borderRadius: 12, border: `1px solid ${COLORS.border}`, background: "#fff" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, color: COLORS.muted, fontSize: 12, marginBottom: 8 }}>
         {icon}
         <span style={{ textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</span>
@@ -103,7 +103,7 @@ function HeatStrip({ c }) {
   );
 }
 
-export default function App() {
+export default function CarteraClientes() {
   const [rows, setRows] = useState(null);
   const [fileName, setFileName] = useState("");
   const [error, setError] = useState("");
@@ -241,6 +241,11 @@ export default function App() {
     setVendedor("Todos"); setUnidad("Todas"); setSearch("");
   };
 
+  const handlePrint = () => {
+    setExpanded(new Set(byCliente.map((c) => c.cliente)));
+    setTimeout(() => window.print(), 150);
+  };
+
   return (
     <div style={{ fontFamily: "Inter, sans-serif", color: COLORS.ink, background: "#fff", minHeight: "100%" }}>
       <style>{`
@@ -250,6 +255,16 @@ export default function App() {
         table.cartera-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: ${COLORS.muted}; padding: 8px 10px; border-bottom: 1px solid ${COLORS.border}; }
         table.cartera-table td { padding: 10px; border-bottom: 1px solid ${COLORS.border}; font-size: 13px; vertical-align: middle; }
         table.cartera-table tr:hover { background: ${COLORS.surface}; }
+
+        @media print {
+          @page { size: A4 landscape; margin: 12mm; }
+          .no-print { display: none !important; }
+          body, div { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          .print-scroll { max-height: none !important; overflow: visible !important; }
+          table.cartera-table tr { page-break-inside: avoid; }
+          .print-card { break-inside: avoid; }
+          .recharts-wrapper { break-inside: avoid; }
+        }
       `}</style>
 
       <div className="display" style={{ padding: "24px 28px", borderBottom: `1px solid ${COLORS.border}` }}>
@@ -288,7 +303,7 @@ export default function App() {
       ) : (
         <div style={{ padding: 28 }}>
           {/* Filtros */}
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginBottom: 20 }}>
+          <div className="no-print" style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginBottom: 20 }}>
             <select value={vendedor} onChange={(e) => setVendedor(e.target.value)} style={selectStyle}>
               <option>Todos</option>
               {vendedores.map((v) => <option key={v} value={v}>{v}</option>)}
@@ -301,6 +316,9 @@ export default function App() {
               <Search size={14} style={{ position: "absolute", left: 10, top: 10, color: COLORS.muted }} />
               <input placeholder="Buscar cliente…" value={search} onChange={(e) => setSearch(e.target.value)} style={{ ...inputStyle, paddingLeft: 30 }} />
             </div>
+            <button onClick={handlePrint} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", borderRadius: 8, border: `1px solid ${COLORS.ink}`, background: COLORS.ink, color: "#fff", fontSize: 13, cursor: "pointer" }}>
+              <Printer size={13} /> Imprimir reporte
+            </button>
             <button onClick={reset} style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", borderRadius: 8, border: `1px solid ${COLORS.border}`, background: "#fff", fontSize: 13, cursor: "pointer", color: COLORS.muted }}>
               <RotateCcw size={13} /> Cargar otro archivo
             </button>
@@ -346,13 +364,13 @@ export default function App() {
                   {PERIODS.map((label) => {
                     const data = projection[label];
                     return (
-                      <div key={label} style={{ flex: "1 1 200px", padding: 14, borderRadius: 10, background: COLORS.surface }}>
+                      <div key={label} className="print-card" style={{ flex: "1 1 200px", padding: 14, borderRadius: 10, background: COLORS.surface }}>
                         <div style={{ fontSize: 11, color: COLORS.muted, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>{label}</div>
                         <div className="mono" style={{ fontSize: 17, fontWeight: 600, color: COLORS.porVencer, marginBottom: 10 }}>{fmtMoney(data.total)}</div>
                         {data.clientes.length === 0 ? (
                           <div style={{ fontSize: 12, color: COLORS.muted }}>Sin vencimientos</div>
                         ) : (
-                          <div style={{ maxHeight: 150, overflowY: "auto", display: "flex", flexDirection: "column", gap: 5 }}>
+                          <div className="print-scroll" style={{ maxHeight: 150, overflowY: "auto", display: "flex", flexDirection: "column", gap: 5 }}>
                             {data.clientes.map((cl) => (
                               <div key={cl.cliente} style={{ display: "flex", justifyContent: "space-between", gap: 8, fontSize: 12 }}>
                                 <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{cl.cliente}</span>
