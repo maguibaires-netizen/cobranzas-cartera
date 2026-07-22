@@ -90,19 +90,6 @@ function Kpi({ icon, label, value, sub, tint }) {
   );
 }
 
-function HeatStrip({ c }) {
-  const total = BUCKET_ORDER.reduce((s, b) => s + Math.abs(c[b]), 0);
-  return (
-    <div style={{ display: "flex", width: 140, height: 10, borderRadius: 4, overflow: "hidden", background: COLORS.surface }}>
-      {total === 0 ? null : BUCKET_ORDER.map((b) => {
-        const w = (Math.abs(c[b]) / total) * 100;
-        if (w <= 0) return null;
-        return <div key={b} title={`${BUCKET_LABELS[b]}: ${fmtMoney(c[b])}`} style={{ width: `${w}%`, background: COLORS[b] }} />;
-      })}
-    </div>
-  );
-}
-
 export default function CarteraClientes() {
   const [rows, setRows] = useState(null);
   const [fileName, setFileName] = useState("");
@@ -257,7 +244,7 @@ export default function CarteraClientes() {
         table.cartera-table tr:hover { background: ${COLORS.surface}; }
 
         @media print {
-          @page { size: A4 landscape; margin: 12mm; }
+          @page { size: A4 portrait; margin: 12mm; }
           .no-print { display: none !important; }
           body, div { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .print-scroll { max-height: none !important; overflow: visible !important; }
@@ -390,7 +377,7 @@ export default function CarteraClientes() {
                 <div style={{ padding: "16px 20px 8px" }}>
                   <div className="display" style={{ fontSize: 14, fontWeight: 600 }}>Detalle por cliente</div>
                   <div style={{ fontSize: 12, color: COLORS.muted, marginTop: 2 }}>
-                    Hacé clic en un cliente para ver sus comprobantes. La barra de "Antigüedad de deuda" representa, en proporción, qué parte del saldo total de ese cliente cae en cada período — no es un monto, es una composición (%).
+                    Hacé clic en un cliente para ver sus comprobantes. Los colores de "Estado" indican el período de antigüedad de cada comprobante.
                   </div>
                   <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginTop: 10 }}>
                     {BUCKET_ORDER.map((b) => (
@@ -407,7 +394,6 @@ export default function CarteraClientes() {
                       <th></th>
                       <th>Cliente</th>
                       <th>Vendedor</th>
-                      <th>Antigüedad de deuda</th>
                       <th style={{ textAlign: "right" }}>Total</th>
                     </tr>
                   </thead>
@@ -420,13 +406,12 @@ export default function CarteraClientes() {
                           </td>
                           <td style={{ fontWeight: 500 }}>{c.cliente}</td>
                           <td style={{ color: COLORS.muted }}>{c.vendedor}</td>
-                          <td><HeatStrip c={c} /></td>
                           <td className="mono" style={{ textAlign: "right", fontWeight: 600 }}>{fmtMoney(c.total)}</td>
                         </tr>
                         {expanded.has(c.cliente) && (
                           <tr key={c.cliente + "-detail"}>
                             <td></td>
-                            <td colSpan={4} style={{ background: COLORS.surface, padding: 0 }}>
+                            <td colSpan={3} style={{ background: COLORS.surface, padding: 0 }}>
                               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                                 <thead>
                                   <tr>
