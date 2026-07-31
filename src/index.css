@@ -59,7 +59,7 @@ a { color: inherit; }
 .frame-card-header-title { font-size: 13px; font-weight: 600; }
 .frame-open-link { font-size: 11px; font-weight: 600; color: var(--pink-ink); text-decoration: none; white-space: nowrap; }
 
-.embed-frame { width: 100%; height: calc(100vh - 260px); min-height: 500px; border: none; display: block; }
+.embed-frame { width: 100%; height: calc(100vh - 200px); min-height: 640px; border: none; display: block; }
 
 /* --- Tabs (Pedidos pendientes) --- */
 .tabs { display: flex; gap: 6px; margin-bottom: 16px; }
