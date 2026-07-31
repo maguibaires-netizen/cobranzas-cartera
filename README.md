@@ -1,6 +1,6 @@
-# Cobranzas — Cartera de clientes
+# Cobranzas — Portal
 
-App web para el sector de cobranzas: cartera de clientes por vendedor, antigüedad de deuda y proyección de vencimientos. Pensada como la primera pieza de un portal más amplio.
+Portal web del sector de Créditos y Cobranzas: reportes propios y accesos directos a las planillas del equipo, todo en un solo lugar.
 
 ## Estructura
 
@@ -10,9 +10,29 @@ cobranzas-cartera/
 ├── package.json
 ├── vite.config.js
 └── src/
-    ├── main.jsx      ← punto de entrada, no hace falta tocarlo
-    └── App.jsx        ← el reporte en sí (acá vas a hacer los cambios)
+    ├── main.jsx              ← punto de entrada, no hace falta tocarlo
+    ├── index.css             ← estilos compartidos (colores, tipografía, tarjetas)
+    ├── App.jsx               ← define las rutas (qué página se ve en cada URL)
+    ├── components/
+    │   ├── Layout.jsx        ← navbar de arriba, en todas las páginas
+    │   ├── Navbar.jsx
+    │   └── SheetEmbed.jsx    ← plantilla reusable para embeber un Google Sheet
+    └── pages/
+        ├── Home.jsx                  ← pantalla de bienvenida / selector
+        ├── CarteraClientes.jsx       ← reporte de cartera (el primero que armamos)
+        ├── PedidosPendientes.jsx     ← planilla + reporte, con pestañas
+        ├── ChequesRechazados.jsx
+        ├── PendientesConciliar.jsx
+        └── Legajos.jsx               ← todavía sin desarrollar
 ```
+
+## Pendiente: completar 2 IDs de Sheets
+
+En `src/pages/ChequesRechazados.jsx` y `src/pages/PendientesConciliar.jsx` hay una línea:
+```js
+const SHEET_ID = "PEGAR_ID_ACA";
+```
+Reemplazá `PEGAR_ID_ACA` por el ID real de cada planilla (mismo procedimiento que ya hiciste antes: de la URL del Sheet, la parte entre `/d/` y `/edit`).
 
 ## 1) Probarlo en tu máquina (opcional, pero recomendado)
 
@@ -25,45 +45,23 @@ npm run dev
 
 Te va a abrir algo como `http://localhost:5173` con la app corriendo.
 
-## 2) Subirlo a GitHub
+## 2) Subir los cambios a GitHub
 
-Vercel despliega directo desde un repositorio de GitHub, así que primero subimos el código ahí.
-
-**Sin usar la terminal (más simple):**
-1. Entrá a [github.com](https://github.com) → **New repository** → nombre `cobranzas-cartera` → **Create repository**.
-2. En la página del repo vacío, click en **uploading an existing file** y arrastrá toda la carpeta (o los archivos uno por uno, incluyendo `.gitignore`).
-3. **Commit changes**.
-
-**Con terminal (si ya usás git):**
 ```bash
-cd cobranzas-cartera
-git init
 git add .
-git commit -m "Primera versión: cartera de clientes"
-git branch -M main
-git remote add origin https://github.com/TU-USUARIO/cobranzas-cartera.git
-git push -u origin main
+git commit -m "Portal completo con navegación"
+git push
 ```
 
-## 3) Desplegar en Vercel
+## 3) Vercel redeploya solo
 
-1. Entrá a [vercel.com](https://vercel.com) → **Add New... → Project**.
-2. Elegí el repo `cobranzas-cartera` que subiste.
-3. Vercel detecta automáticamente que es un proyecto Vite — no hace falta tocar nada de configuración.
-4. **Deploy**.
-5. En un par de minutos te da una URL tipo `cobranzas-cartera.vercel.app` — ese es tu **link permanente**, ya lo podés compartir con todo el equipo.
+En 1-2 minutos el link de siempre (`cobranzas-cartera.vercel.app`) ya va a mostrar el portal completo, con la pantalla de bienvenida como página principal.
 
-## 4) Actualizarlo más adelante
+## Cómo agregar una herramienta nueva más adelante
 
-Cada vez que quieras hacer un cambio (agregar un reporte, ajustar un color, corregir algo):
-1. Editás el archivo correspondiente (por ejemplo `src/App.jsx`).
-2. Subís el cambio a GitHub (`git push`, o volviendo a subir el archivo desde la web de GitHub).
-3. Vercel redetecta el cambio y **redeploya solo**, en 1-2 minutos. No hay que hacer nada más.
+1. Creás un archivo nuevo en `src/pages/` (por ejemplo `Legajos.jsx` ya existe como placeholder — cuando la desarrollemos, se reemplaza ese archivo).
+2. Si es otro Google Sheet simple, podés reusar `SheetEmbed` como hacen `ChequesRechazados.jsx` y `PendientesConciliar.jsx` — es la forma más corta de agregar una planilla nueva.
+3. Agregás la ruta nueva en `src/App.jsx` (una línea `<Route path="..." element={...} />`).
+4. Agregás la tarjeta correspondiente en `src/pages/Home.jsx`.
 
-## Próximos pasos posibles
-
-Esta es la primera pantalla del portal. Cuando quieras sumar más reportes (por ejemplo, otro tipo de informe de cobranzas), lo natural es:
-- Agregar un menú de navegación simple (podemos usar `react-router-dom`).
-- Cada reporte nuevo como un componente separado en `src/`.
-
-Avisame cuando quieras dar ese paso y lo armamos juntas.
+Avisame cuando quieras sumar algo y lo hacemos juntas.
