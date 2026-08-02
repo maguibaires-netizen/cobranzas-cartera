@@ -50,9 +50,9 @@ export default function Home() {
         </Link>
 
         <Link className="tool-card sheets" to="/pendientes-conciliar">
-          <div className="tool-icon">Co</div>
+          <div className="tool-icon">CC</div>
           <div className="tool-name">Pendientes de conciliar</div>
-          <div className="tool-desc">Cuentas con pagos o notas de crédito sin aplicar.</div>
+          <div className="tool-desc">Composicion del saldo cuenta contable: pendientes de conciliar.</div>
           <div className="tool-status sheets">Google Sheets</div>
         </Link>
       </div>
