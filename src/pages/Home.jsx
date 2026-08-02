@@ -36,7 +36,7 @@ export default function Home() {
         <Link className="tool-card" to="/legajos">
           <FolderOpen className="tool-icon-lg" color="var(--muted)" strokeWidth={1.75} style={{ opacity: 0.6 }} />
           <div className="tool-name">Legajos de clientes con crédito</div>
-          <div className="tool-desc">A desarrollar — pedido del jefe, todavía no existe.</div>
+          <div className="tool-desc">Informes de credito + documentación.</div>
           <div className="tool-status soon">A desarrollar</div>
         </Link>
 
@@ -50,7 +50,7 @@ export default function Home() {
         <Link className="tool-card" to="/pendientes-conciliar">
           <Scale className="tool-icon-lg" color="var(--lav-ink)" strokeWidth={1.75} />
           <div className="tool-name">Pendientes de conciliar</div>
-          <div className="tool-desc">Cuentas con pagos o notas de crédito sin aplicar.</div>
+          <div className="tool-desc">Composición de saldo de cta contable.</div>
           <div className="tool-status sheets">Google Sheets</div>
         </Link>
       </div>
