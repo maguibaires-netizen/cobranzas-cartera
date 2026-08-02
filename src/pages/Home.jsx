@@ -6,7 +6,7 @@ export default function Home() {
     <>
       <div className="hero">
         <div className="hero-headline">Las <em>superpoderosas</em><br />de Baires.</div>
-        <div className="hero-sub">Elegí con qué querés trabajar hoy — reportes, planillas y legajos, todo desde un solo lugar.</div>
+        <div className="hero-sub">Rportes, planillas y legajos, todo desde un solo lugar.</div>
         <div className="stamp">
           <div className="stamp-text">
             <div className="stamp-word">APROBADO</div>
