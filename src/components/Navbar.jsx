@@ -8,7 +8,7 @@ export default function Navbar() {
       </Link>
       <div className="navtags">
         <div className="tag tag-green">Créditos y Cobranzas</div>
-        <div className="tag tag-yellow">Equipo</div>
+        <div className="tag tag-yellow">Baires</div>
       </div>
     </div>
   );

@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
+import { Wallet, ClipboardList, FolderOpen, Ban, Scale } from "lucide-react";
 
 export default function Home() {
   return (
     <>
       <div className="hero">
         <div className="hero-headline">Las <em>superpoderosas</em><br />de Baires.</div>
-        <div className="hero-sub">Reportes, planillas y legajos, todo desde un solo lugar.</div>
+        <div className="hero-sub">Elegí con qué querés trabajar hoy — reportes, planillas y legajos, todo desde un solo lugar.</div>
         <div className="stamp">
           <div className="stamp-text">
             <div className="stamp-word">APROBADO</div>
@@ -18,41 +19,38 @@ export default function Home() {
       <div className="tools-sub">Tocá una tarjeta para abrir esa herramienta</div>
 
       <div className="tools-grid">
-        <Link className="tool-card featured" to="/cartera-clientes">
-          <div className="featured-left">
-            <div className="tool-icon">$</div>
-            <div className="tool-name">Reporte semanal · Cartera de clientes</div>
-            <div className="tool-desc">Vencimientos y antigüedad de deuda, por vendedor.</div>
-            <div className="tool-status live">Activo</div>
-          </div>
-          <div className="featured-cta">Abrir reporte →</div>
-        </Link>
-
-        <Link className="tool-card sheets" to="/pedidos-pendientes">
-          <div className="tool-icon">P</div>
+        <Link className="tool-card" to="/pedidos-pendientes">
+          <ClipboardList className="tool-icon-lg" color="var(--pink)" strokeWidth={1.75} />
           <div className="tool-name">Pedidos pendientes</div>
           <div className="tool-desc">Planilla de seguimiento + reporte diario por facturación, motivo, vendedor y cliente.</div>
           <div className="tool-status sheets">Google Sheets</div>
         </Link>
 
-        <Link className="tool-card soon" to="/legajos">
-          <div className="tool-icon">L</div>
+        <Link className="tool-card" to="/cartera-clientes">
+          <Wallet className="tool-icon-lg" color="var(--pink)" strokeWidth={1.75} />
+          <div className="tool-name">Reporte semanal · Cartera de clientes</div>
+          <div className="tool-desc">Vencimientos y antigüedad de deuda, por vendedor.</div>
+          <div className="tool-status live">Activo</div>
+        </Link>
+
+        <Link className="tool-card" to="/legajos">
+          <FolderOpen className="tool-icon-lg" color="var(--muted)" strokeWidth={1.75} style={{ opacity: 0.6 }} />
           <div className="tool-name">Legajos de clientes con crédito</div>
-          <div className="tool-desc">Informes de credito + documentación.</div>
+          <div className="tool-desc">A desarrollar — pedido del jefe, todavía no existe.</div>
           <div className="tool-status soon">A desarrollar</div>
         </Link>
 
-        <Link className="tool-card sheets" to="/cheques-rechazados">
-          <div className="tool-icon">Ch</div>
+        <Link className="tool-card" to="/cheques-rechazados">
+          <Ban className="tool-icon-lg" color="var(--lav-ink)" strokeWidth={1.75} />
           <div className="tool-name">Cheques rechazados</div>
           <div className="tool-desc">Registro de cheques rechazados por cliente.</div>
           <div className="tool-status sheets">Google Sheets</div>
         </Link>
 
-        <Link className="tool-card sheets" to="/pendientes-conciliar">
-          <div className="tool-icon">CC</div>
+        <Link className="tool-card" to="/pendientes-conciliar">
+          <Scale className="tool-icon-lg" color="var(--lav-ink)" strokeWidth={1.75} />
           <div className="tool-name">Pendientes de conciliar</div>
-          <div className="tool-desc">Composicion del saldo cuenta contable: pendientes de conciliar.</div>
+          <div className="tool-desc">Cuentas con pagos o notas de crédito sin aplicar.</div>
           <div className="tool-status sheets">Google Sheets</div>
         </Link>
       </div>
@@ -65,3 +63,4 @@ export default function Home() {
     </>
   );
 }
+
