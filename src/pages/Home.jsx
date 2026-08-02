@@ -5,7 +5,7 @@ export default function Home() {
     <>
       <div className="hero">
         <div className="hero-headline">Las <em>superpoderosas</em><br />de Baires.</div>
-        <div className="hero-sub">Elegí con qué querés trabajar hoy — reportes, planillas y legajos, todo desde un solo lugar.</div>
+        <div className="hero-sub">Reportes, planillas y legajos, todo desde un solo lugar.</div>
         <div className="stamp">
           <div className="stamp-text">
             <div className="stamp-word">APROBADO</div>
@@ -38,7 +38,7 @@ export default function Home() {
         <Link className="tool-card soon" to="/legajos">
           <div className="tool-icon">L</div>
           <div className="tool-name">Legajos de clientes con crédito</div>
-          <div className="tool-desc">A desarrollar — pedido del jefe, todavía no existe.</div>
+          <div className="tool-desc">Informes de credito + documentación.</div>
           <div className="tool-status soon">A desarrollar</div>
         </Link>
 
