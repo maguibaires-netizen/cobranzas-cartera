@@ -25,7 +25,9 @@ export default function SheetEmbed({ titulo, descripcion, icono, sheetId, minima
           </div>
           <a className="frame-open-link" href={openUrl} target="_blank" rel="noreferrer">Abrir en Google Sheets ↗</a>
         </div>
-        <iframe className="embed-frame" src={src} title={titulo}></iframe>
+        <div className="embed-frame-wrapper">
+          <iframe className="embed-frame" src={src} title={titulo}></iframe>
+        </div>
       </div>
     </>
   );

@@ -44,11 +44,13 @@ export default function PedidosPendientes() {
           )}
         </div>
 
-        {tab === "planilla" ? (
-          <iframe className="embed-frame" src={sheetSrc} title="Pedidos pendientes"></iframe>
-        ) : (
-          <iframe className="embed-frame" src={REPORTE_URL} title="Reporte de pedidos pendientes"></iframe>
-        )}
+        <div className="embed-frame-wrapper">
+          {tab === "planilla" ? (
+            <iframe className="embed-frame" src={sheetSrc} title="Pedidos pendientes"></iframe>
+          ) : (
+            <iframe className="embed-frame" src={REPORTE_URL} title="Reporte de pedidos pendientes"></iframe>
+          )}
+        </div>
       </div>
     </>
   );
