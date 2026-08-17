@@ -26,7 +26,7 @@ export default function PedidosPendientes() {
     try {
       await fetch(
         `${REPORTE_URL}?accion=actualizar&clave=${encodeURIComponent(CLAVE_ACTUALIZAR)}`,
-        { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" } }
+        { method: "GET", mode: "no-cors" }
       );
       // mode "no-cors" no permite leer la respuesta real (limitación del navegador,
       // no nuestra) — asumimos que se envió y refrescamos la planilla después de un rato.
