@@ -11,33 +11,34 @@ export default function PedidosPendientes() {
   const [actualizando, setActualizando] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [mensaje, setMensaje] = useState("");
+  const [updateSrc, setUpdateSrc] = useState(null);
 
   const sheetSrc = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing&rm=minimal&widget=true`;
   const openUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
 
-  const handleActualizar = async () => {
+  const handleActualizar = () => {
     const confirmado = window.confirm(
       "¿Segura que querés actualizar? Esto borra los motivos ya cargados."
     );
     if (!confirmado) return;
 
     setActualizando(true);
-    setMensaje("");
-    try {
-      await fetch(
-        `${REPORTE_URL}?accion=actualizar&clave=${encodeURIComponent(CLAVE_ACTUALIZAR)}`,
-        { method: "GET", mode: "no-cors" }
-      );
-      // mode "no-cors" no permite leer la respuesta real (limitación del navegador,
-      // no nuestra) — asumimos que se envió y refrescamos la planilla después de un rato.
-      setMensaje("✅ Solicitud enviada");
-      setTimeout(() => setReloadKey((k) => k + 1), 3000);
-    } catch (err) {
-      setMensaje("❌ No se pudo conectar con el script");
-    } finally {
+    setMensaje("Actualizando…");
+
+    // En vez de fetch() (que Google bloquea con su pantalla de login),
+    // cargamos la URL en un iframe invisible — igual que hace la pestaña
+    // "Reporte", que sí funciona, porque el navegador la trata como una
+    // visita real, con la sesión de Google ya activa.
+    const url = `${REPORTE_URL}?accion=actualizar&clave=${encodeURIComponent(CLAVE_ACTUALIZAR)}&_=${Date.now()}`;
+    setUpdateSrc(url);
+
+    setTimeout(() => {
+      setUpdateSrc(null);
+      setReloadKey((k) => k + 1); // recarga la planilla visible con los datos frescos
+      setMensaje("✅ Actualizado");
       setActualizando(false);
-      setTimeout(() => setMensaje(""), 6000);
-    }
+      setTimeout(() => setMensaje(""), 5000);
+    }, 4000);
   };
 
   return (
@@ -96,6 +97,11 @@ export default function PedidosPendientes() {
           )}
         </div>
       </div>
+
+      {/* Iframe invisible que dispara la actualización, igual que hace la pestaña Reporte */}
+      {updateSrc && (
+        <iframe src={updateSrc} title="actualizar" style={{ display: "none" }}></iframe>
+      )}
     </>
   );
 }
