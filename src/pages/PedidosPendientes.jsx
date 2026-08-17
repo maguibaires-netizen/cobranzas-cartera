@@ -24,22 +24,19 @@ export default function PedidosPendientes() {
     setActualizando(true);
     setMensaje("");
     try {
-      const res = await fetch(
+      await fetch(
         `${REPORTE_URL}?accion=actualizar&clave=${encodeURIComponent(CLAVE_ACTUALIZAR)}`,
-        { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" } }
+        { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" } }
       );
-      const data = await res.json();
-      if (data.ok) {
-        setMensaje("✅ Tabla actualizada");
-        setReloadKey((k) => k + 1); // fuerza recarga del iframe de la planilla
-      } else {
-        setMensaje("❌ " + (data.error || "No se pudo actualizar"));
-      }
+      // mode "no-cors" no permite leer la respuesta real (limitación del navegador,
+      // no nuestra) — asumimos que se envió y refrescamos la planilla después de un rato.
+      setMensaje("✅ Solicitud enviada");
+      setTimeout(() => setReloadKey((k) => k + 1), 3000);
     } catch (err) {
       setMensaje("❌ No se pudo conectar con el script");
     } finally {
       setActualizando(false);
-      setTimeout(() => setMensaje(""), 5000);
+      setTimeout(() => setMensaje(""), 6000);
     }
   };
 
