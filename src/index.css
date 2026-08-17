@@ -33,6 +33,11 @@ a { color: inherit; }
 .shell-fixed { height: 100vh; overflow: hidden; display: flex; flex-direction: column; box-sizing: border-box; padding-bottom: 20px; }
 .screen { max-width: 1400px; margin: 0 auto; }
 .screen-fixed { flex: 1; display: flex; flex-direction: column; min-height: 0; width: 100%; }
+.screen-fixed .navbar { margin-bottom: 14px; }
+.screen-fixed .back-link { margin-bottom: 8px; }
+.screen-fixed .page-header { margin-bottom: 10px; }
+.screen-fixed .page-title { font-size: 20px; }
+.screen-fixed .tabs { margin-bottom: 8px; }
 
 .navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
 .logo { font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px; text-decoration: none; }

@@ -15,10 +15,7 @@ export default function PedidosPendientes() {
       <Link className="back-link" to="/">← Volver al portal</Link>
 
       <div className="page-header">
-        <div>
-          <div className="page-title">Pedidos pendientes</div>
-          <div className="page-sub">Seguimiento de pedidos a aprobar, con el motivo cuando no se aprueban.</div>
-        </div>
+        <div className="page-title">Pedidos pendientes</div>
         <div className="status-tag"><span className="status-dot"></span> Google Sheets · edición en vivo</div>
       </div>
 

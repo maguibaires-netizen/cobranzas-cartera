@@ -7,7 +7,6 @@ export default function PendientesConciliar() {
   return (
     <SheetEmbed
       titulo="Pendientes de conciliar"
-      descripcion="Cuentas con pagos o notas de crédito sin aplicar todavía contra la factura correspondiente."
       icono="Co"
       sheetId={SHEET_ID}
     />

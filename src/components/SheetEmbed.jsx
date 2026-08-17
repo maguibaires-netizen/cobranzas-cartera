@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function SheetEmbed({ titulo, descripcion, icono, sheetId, minimal = true }) {
+export default function SheetEmbed({ titulo, icono, sheetId, minimal = true }) {
   const params = minimal ? "edit?usp=sharing&rm=minimal&widget=true" : "edit?usp=sharing";
   const src = `https://docs.google.com/spreadsheets/d/${sheetId}/${params}`;
   const openUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/edit`;
@@ -10,10 +10,7 @@ export default function SheetEmbed({ titulo, descripcion, icono, sheetId, minima
       <Link className="back-link" to="/">← Volver al portal</Link>
 
       <div className="page-header">
-        <div>
-          <div className="page-title">{titulo}</div>
-          <div className="page-sub">{descripcion}</div>
-        </div>
+        <div className="page-title">{titulo}</div>
         <div className="status-tag"><span className="status-dot"></span> Google Sheets · edición en vivo</div>
       </div>
 

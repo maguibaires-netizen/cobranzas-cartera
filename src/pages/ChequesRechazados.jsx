@@ -7,7 +7,6 @@ export default function ChequesRechazados() {
   return (
     <SheetEmbed
       titulo="Cheques rechazados"
-      descripcion="Registro de cheques rechazados por cliente, para seguimiento y gestión de cobranza."
       icono="Ch"
       sheetId={SHEET_ID}
     />
