@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { Wallet, ClipboardList, FolderOpen, Ban, Scale } from "lucide-react";
+import { Wallet, ClipboardList, FolderOpen, Ban, Scale, Receipt } from "lucide-react";
 
 export default function Home() {
   return (
     <>
       <div className="hero">
         <div className="hero-headline">Las <em>superpoderosas</em><br />de Baires.</div>
-        <div className="hero-sub">Rportes, planillas y legajos, todo desde un solo lugar.</div>
+        <div className="hero-sub">Elegí con qué querés trabajar hoy — reportes, planillas y legajos, todo desde un solo lugar.</div>
         <div className="stamp">
           <div className="stamp-text">
             <div className="stamp-word">APROBADO</div>
@@ -36,7 +36,7 @@ export default function Home() {
         <Link className="tool-card" to="/legajos">
           <FolderOpen className="tool-icon-lg" color="var(--muted)" strokeWidth={1.75} style={{ opacity: 0.6 }} />
           <div className="tool-name">Legajos de clientes con crédito</div>
-          <div className="tool-desc">Informes de credito + documentación.</div>
+          <div className="tool-desc">A desarrollar — pedido del jefe, todavía no existe.</div>
           <div className="tool-status soon">A desarrollar</div>
         </Link>
 
@@ -50,8 +50,15 @@ export default function Home() {
         <Link className="tool-card" to="/pendientes-conciliar">
           <Scale className="tool-icon-lg" color="var(--lav-ink)" strokeWidth={1.75} />
           <div className="tool-name">Pendientes de conciliar</div>
-          <div className="tool-desc">Composición de saldo de cta contable.</div>
+          <div className="tool-desc">Cuentas con pagos o notas de crédito sin aplicar.</div>
           <div className="tool-status sheets">Google Sheets</div>
+        </Link>
+
+        <Link className="tool-card" to="/carga-retenciones">
+          <Receipt className="tool-icon-lg" color="var(--muted)" strokeWidth={1.75} style={{ opacity: 0.6 }} />
+          <div className="tool-name">Carga de retenciones</div>
+          <div className="tool-desc">App para procesar PDF de retenciones — en desarrollo aparte.</div>
+          <div className="tool-status soon">A desarrollar</div>
         </Link>
       </div>
 
