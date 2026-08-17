@@ -114,3 +114,6 @@ a { color: inherit; }
 .placeholder-box { background: #fff; border: 1px dashed #E5DDE2; border-radius: 18px; padding: 60px 40px; text-align: center; }
 .placeholder-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 22px; margin-bottom: 8px; }
 .placeholder-sub { font-size: 13px; color: var(--muted); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.spin { animation: spin 1s linear infinite; }
