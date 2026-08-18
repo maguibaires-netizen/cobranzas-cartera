@@ -21,10 +21,10 @@ const COLORS = {
 
 const BUCKET_LABELS = {
   porVencer: "A vencer",
-  b0_30: "0–30 días",
-  b30_60: "30–60 días",
-  b60_90: "60–90 días",
-  b90plus: "+90 días",
+  b0_30: "Vencido -30",
+  b30_60: "Vencido +30",
+  b60_90: "Vencido +60",
+  b90plus: "Vencido +90",
 };
 
 const BUCKET_ORDER = ["porVencer", "b0_30", "b30_60", "b60_90", "b90plus"];
