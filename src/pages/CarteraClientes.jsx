@@ -327,7 +327,6 @@ export default function CarteraClientes() {
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 24 }}>
             <Kpi icon={<Wallet size={14} />} label="Total cartera" value={fmtMoney(kpis.total)} sub={`${kpis.clientes} clientes`} />
             <Kpi icon={<AlertTriangle size={14} />} label="Total vencido" value={fmtMoney(kpis.vencido)} sub={`${kpis.pctVencido.toFixed(1)}% de la cartera`} tint={COLORS.b60_90} />
-            <Kpi icon={<AlertTriangle size={14} />} label="Crítico (+60 días)" value={fmtMoney(kpis.criticos)} sub={`${kpis.criticosClientes.length} cliente(s) · gestión prioritaria`} tint={COLORS.b90plus} />
             <Kpi icon={<Wallet size={14} />} label="Saldo a favor / a cuenta" value={fmtMoney(Math.abs(kpis.saldoAFavor))} sub="Pendiente de conciliar" tint={COLORS.muted} />
             <Kpi icon={<CalendarClock size={14} />} label="A vencer 0–7 días" value={fmtMoney(projection["0–7 días"].total)} sub="Próxima semana" tint={COLORS.porVencer} />
           </div>
