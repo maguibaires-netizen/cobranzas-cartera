@@ -16,8 +16,8 @@ export default function CargaRetenciones() {
       <div className="placeholder-box">
         <div className="placeholder-title">Todavía no armamos esto 👀</div>
         <div className="placeholder-sub">
-          Se está desarrollando en otra conversación aparte. Cuando esté lista, la conectamos acá
-          (con un link o embebida, según cómo termine quedando armada).
+          Se está desarrollando.
+          
         </div>
       </div>
     </>
