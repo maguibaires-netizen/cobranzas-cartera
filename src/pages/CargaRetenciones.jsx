@@ -46,7 +46,13 @@ export default function CargaRetenciones() {
 
   return (
     <>
-      <Link className="back-link" to="/">← Volver al portal</Link>
+      {mostrarForm ? (
+        <button className="back-link" onClick={() => setMostrarForm(false)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}>
+          ← Volver a retenciones
+        </button>
+      ) : (
+        <Link className="back-link" to="/">← Volver al portal</Link>
+      )}
 
       <div className="page-header">
         <div className="page-title">Carga de retenciones</div>
