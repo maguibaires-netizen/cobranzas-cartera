@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { RotateCw } from "lucide-react";
 
-export default function SheetEmbed({ titulo, icono, sheetId, minimal = true, actualizar }) {
+export default function SheetEmbed({ titulo, icono, sheetId, minimal = true, actualizar, sinAchicar = false }) {
   const params = minimal ? "edit?usp=sharing&rm=minimal&widget=true" : "edit?usp=sharing";
   const src = `https://docs.google.com/spreadsheets/d/${sheetId}/${params}`;
   const openUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/edit`;
@@ -68,7 +68,7 @@ export default function SheetEmbed({ titulo, icono, sheetId, minimal = true, act
           </div>
         </div>
         <div className="embed-frame-wrapper">
-          <iframe key={reloadKey} className="embed-frame" src={src} title={titulo}></iframe>
+          <iframe key={reloadKey} className={sinAchicar ? "embed-frame-full" : "embed-frame"} src={src} title={titulo}></iframe>
         </div>
       </div>
 

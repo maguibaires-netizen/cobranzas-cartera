@@ -8,6 +8,7 @@ export default function CargaRetenciones() {
       titulo="Carga de retenciones"
       icono="Rt"
       sheetId={SHEET_ID}
+      sinAchicar
     />
   );
 }

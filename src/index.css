@@ -68,6 +68,7 @@ a { color: inherit; }
 
 .embed-frame-wrapper { flex: 1; min-height: 0; overflow: hidden; }
 .embed-frame { width: 125%; height: 125%; border: none; display: block; transform: scale(0.8); transform-origin: 0 0; }
+.embed-frame-full { width: 100%; height: 100%; border: none; display: block; }
 
 /* --- Tabs (Pedidos pendientes) --- */
 .tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-shrink: 0; }
