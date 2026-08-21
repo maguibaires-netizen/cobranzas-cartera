@@ -13,7 +13,7 @@ export default function PendientesConciliar() {
       actualizar={{
         url: REPORTE_URL,
         clave: CLAVE_ACTUALIZAR,
-        confirmMsg: "¿Segura que querés actualizar?",
+        confirmMsg: "¿Segura que querés actualizar? Esto vuelve a traer los datos desde \"mayor\" y reemplaza las columnas de Haber y Debe.",
       }}
     />
   );
