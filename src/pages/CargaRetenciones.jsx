@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Upload, X } from "lucide-react";
 
 const SHEET_ID = "1JlqWyWlRz8BwQhd7E_89GYN6DXGsDvBsbGtw6Mf9M-c";
 const BUSCADOR_URL = "https://script.google.com/macros/s/AKfycby4VzmWdIc4lp_dXvNiHox0XApaL6Ifqt6BQmo9HMwH_IkD3v_OCWhCIOcIhyv9Mw-a/exec";
 const CLAVE = "cobras-2026-retenciones";
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdscjGvGizDxRkMqDM6wR8OSGBd1V-zmbNPdfMsueUf_Bs57g/viewform?embedded=true";
 
 export default function CargaRetenciones() {
   const [texto, setTexto] = useState("");
@@ -11,6 +13,7 @@ export default function CargaRetenciones() {
   const [mensaje, setMensaje] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
   const [updateSrc, setUpdateSrc] = useState(null);
+  const [mostrarForm, setMostrarForm] = useState(false);
 
   const sheetSrc = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing&rm=minimal&widget=true`;
   const openUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
@@ -47,8 +50,26 @@ export default function CargaRetenciones() {
 
       <div className="page-header">
         <div className="page-title">Carga de retenciones</div>
-        <div className="status-tag"><span className="status-dot"></span> Google Sheets · edición en vivo</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button className="upload-btn" onClick={() => setMostrarForm((v) => !v)}>
+            <Upload size={13} />
+            {mostrarForm ? "Ocultar" : "Subir PDF"}
+          </button>
+          <div className="status-tag"><span className="status-dot"></span> Google Sheets · edición en vivo</div>
+        </div>
       </div>
+
+      {mostrarForm && (
+        <div className="upload-panel">
+          <div className="upload-panel-header">
+            <div className="upload-panel-title">Subir archivo de retención</div>
+            <button className="upload-panel-close" onClick={() => setMostrarForm(false)}>
+              <X size={14} />
+            </button>
+          </div>
+          <iframe src={FORM_URL} title="Subir PDF de retención">Cargando…</iframe>
+        </div>
+      )}
 
       <div className="embed-with-sidebar">
         <div className="frame-card">
