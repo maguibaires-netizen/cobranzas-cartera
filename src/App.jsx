@@ -1,4 +1,5 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import Layout from "./components/Layout.jsx";
 import Home from "./pages/Home.jsx";
 import CarteraClientes from "./pages/CarteraClientes.jsx";
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/carga-retenciones" element={<CargaRetenciones />} />
         </Routes>
       </Layout>
+      <Analytics />
     </HashRouter>
   );
 }
