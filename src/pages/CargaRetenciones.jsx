@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Upload, X } from "lucide-react";
+import { Upload, X, FileUp } from "lucide-react";
 
-const SHEET_ID = "1JlqWyWlRz8BwQhd7E_89GYN6DXGsDvBsbGtw6Mf9M-c";
+const SHEET_ID = "1ube6OatkqbmHRjhHbcC4Uz4QVNdOfR-i6sXLKUGaiTg";
 const BUSCADOR_URL = "https://script.google.com/macros/s/AKfycby4VzmWdIc4lp_dXvNiHox0XApaL6Ifqt6BQmo9HMwH_IkD3v_OCWhCIOcIhyv9Mw-a/exec";
 const CLAVE = "cobras-2026-retenciones";
-const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdscjGvGizDxRkMqDM6wR8OSGBd1V-zmbNPdfMsueUf_Bs57g/viewform?embedded=true";
 
 export default function CargaRetenciones() {
   const [texto, setTexto] = useState("");
@@ -13,7 +12,11 @@ export default function CargaRetenciones() {
   const [mensaje, setMensaje] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
   const [updateSrc, setUpdateSrc] = useState(null);
-  const [mostrarForm, setMostrarForm] = useState(false);
+  const [mostrarPanel, setMostrarPanel] = useState(false);
+  const [subiendo, setSubiendo] = useState(false);
+  const [estadoSubida, setEstadoSubida] = useState("");
+  const [dragOver, setDragOver] = useState(false);
+  const inputRef = useRef(null);
 
   const sheetSrc = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing&rm=minimal&widget=true`;
   const openUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
@@ -44,10 +47,60 @@ export default function CargaRetenciones() {
     disparar("quitarFiltro");
   };
 
+  const subirArchivo = async (file) => {
+    if (!file) return;
+    if (file.type !== "application/pdf" && !file.type.startsWith("image/")) {
+      setEstadoSubida("❌ Solo se aceptan PDF o imágenes");
+      return;
+    }
+
+    setSubiendo(true);
+    setEstadoSubida("Subiendo " + file.name + "…");
+
+    try {
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(",")[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const res = await fetch("/api/subir-retencion", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filename: file.name,
+          mimeType: file.type,
+          data: base64,
+          clave: CLAVE,
+        }),
+      });
+
+      const json = await res.json();
+      if (json.ok) {
+        setEstadoSubida("✅ Subido — procesando el texto en segundo plano");
+      } else {
+        setEstadoSubida("❌ " + (json.error || "No se pudo subir"));
+      }
+    } catch (err) {
+      setEstadoSubida("❌ No se pudo conectar con el servidor");
+    } finally {
+      setSubiendo(false);
+      setTimeout(() => setEstadoSubida(""), 6000);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    subirArchivo(file);
+  };
+
   return (
     <>
-      {mostrarForm ? (
-        <button className="back-link" onClick={() => setMostrarForm(false)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}>
+      {mostrarPanel ? (
+        <button className="back-link" onClick={() => setMostrarPanel(false)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", padding: 0 }}>
           ← Volver a retenciones
         </button>
       ) : (
@@ -57,23 +110,45 @@ export default function CargaRetenciones() {
       <div className="page-header">
         <div className="page-title">Carga de retenciones</div>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button className="upload-btn" onClick={() => setMostrarForm((v) => !v)}>
+          <button className="upload-btn" onClick={() => setMostrarPanel((v) => !v)}>
             <Upload size={13} />
-            {mostrarForm ? "Ocultar" : "Subir PDF"}
+            {mostrarPanel ? "Ocultar" : "Subir PDF"}
           </button>
           <div className="status-tag"><span className="status-dot"></span> Google Sheets · edición en vivo</div>
         </div>
       </div>
 
-      {mostrarForm && (
+      {mostrarPanel && (
         <div className="upload-panel">
           <div className="upload-panel-header">
             <div className="upload-panel-title">Subir archivo de retención</div>
-            <button className="upload-panel-close" onClick={() => setMostrarForm(false)}>
+            <button className="upload-panel-close" onClick={() => setMostrarPanel(false)}>
               <X size={14} />
             </button>
           </div>
-          <iframe src={FORM_URL} title="Subir PDF de retención">Cargando…</iframe>
+
+          <div
+            className={`dropzone${dragOver ? " dragover" : ""}`}
+            onClick={() => inputRef.current && inputRef.current.click()}
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={handleDrop}
+          >
+            <FileUp size={28} color="var(--muted)" style={{ margin: "0 auto 10px" }} />
+            <div className="dropzone-title">Arrastrá el PDF acá, o hacé clic para elegirlo</div>
+            <div className="dropzone-sub">Acepta PDF o imágenes (JPG, PNG)</div>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="application/pdf,image/*"
+              style={{ display: "none" }}
+              onChange={(e) => subirArchivo(e.target.files && e.target.files[0])}
+            />
+          </div>
+
+          {(subiendo || estadoSubida) && (
+            <div className="dropzone-status">{estadoSubida || "Subiendo…"}</div>
+          )}
         </div>
       )}
 
