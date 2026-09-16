@@ -68,6 +68,11 @@ export default function CargaRetenciones() {
         client_id: CLIENT_ID,
         scope: DRIVE_SCOPE,
         callback: () => {}, // se define en cada subida
+        error_callback: (err) => {
+          console.error("Error de Google:", err);
+          setEstadoSubida("❌ No se pudo abrir la autorización de Google (" + (err.type || "error") + ")");
+          setSubiendo(false);
+        },
       });
     }
     return tokenClientRef.current;
@@ -159,7 +164,7 @@ export default function CargaRetenciones() {
       }
     };
 
-    tokenClient.requestAccessToken({ prompt: "" });
+    tokenClient.requestAccessToken({ prompt: "consent" });
   };
 
   const handleDrop = (e) => {
