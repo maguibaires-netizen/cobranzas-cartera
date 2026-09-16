@@ -26,6 +26,28 @@ cobranzas-cartera/
         └── Legajos.jsx               ← todavía sin desarrollar
 ```
 
+## Carga de retenciones: conexión con Google Drive
+
+La subida de PDFs/imágenes en "Carga de retenciones" usa OAuth de Google (cada
+persona se conecta una vez con su propia cuenta) en vez de una cuenta de
+servicio, porque la carpeta de destino es de una cuenta de Gmail personal y
+las cuentas de servicio no tienen cuota de almacenamiento propia ahí.
+
+Antes de que esto funcione en Vercel, hace falta:
+
+1. En [Google Cloud Console](https://console.cloud.google.com/apis/credentials),
+   en el mismo Client ID que ya existe, agregar en "Authorized redirect URIs":
+   `https://cobranzas-cartera.vercel.app/api/oauth-callback`
+2. En Vercel → Settings → Environment Variables, agregar `GOOGLE_OAUTH_CLIENT_SECRET`
+   con el valor del "Client secret" de ese mismo Client ID (está en la misma
+   pantalla de Cloud Console).
+3. (Recomendado) Pasar la pantalla de consentimiento OAuth de "Testing" a
+   "In production" en Cloud Console — sigue sin estar verificada por Google
+   (el cartel de "Google no verificó esta app" se sigue viendo), pero evita
+   que el acceso de cada persona caduque solo a los 7 días.
+4. `GOOGLE_SERVICE_ACCOUNT_RETENCIONES` ya no se usa — se puede dejar o borrar
+   de las variables de entorno de Vercel, da lo mismo.
+
 ## Pendiente: completar 2 IDs de Sheets
 
 En `src/pages/ChequesRechazados.jsx` y `src/pages/PendientesConciliar.jsx` hay una línea:

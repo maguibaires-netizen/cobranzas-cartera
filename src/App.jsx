@@ -7,6 +7,8 @@ import ChequesRechazados from "./pages/ChequesRechazados.jsx";
 import PendientesConciliar from "./pages/PendientesConciliar.jsx";
 import Legajos from "./pages/Legajos.jsx";
 import CargaRetenciones from "./pages/CargaRetenciones.jsx";
+import Privacidad from "./pages/Privacidad.jsx";
+import Terminos from "./pages/Terminos.jsx";
 
 export default function App() {
   return (
@@ -20,6 +22,8 @@ export default function App() {
           <Route path="/pendientes-conciliar" element={<PendientesConciliar />} />
           <Route path="/legajos" element={<Legajos />} />
           <Route path="/carga-retenciones" element={<CargaRetenciones />} />
+          <Route path="/privacidad" element={<Privacidad />} />
+          <Route path="/terminos" element={<Terminos />} />
         </Routes>
       </Layout>
     </HashRouter>
