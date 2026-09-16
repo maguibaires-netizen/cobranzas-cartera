@@ -6,6 +6,11 @@ const SHEET_ID = "1ube6OatkqbmHRjhHbcC4Uz4QVNdOfR-i6sXLKUGaiTg";
 const BUSCADOR_URL = "https://script.google.com/macros/s/AKfycby4VzmWdIc4lp_dXvNiHox0XApaL6Ifqt6BQmo9HMwH_IkD3v_OCWhCIOcIhyv9Mw-a/exec";
 const CLAVE = "cobras-2026-retenciones";
 
+const CLIENT_ID = "485502926470-d4qmmmbefehg0rjurtcg9t5nnoi0d4as.apps.googleusercontent.com";
+const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file";
+const FOLDER_ID = "1T1u5pgDtAT0mzx5fxfAaZ9eQj_ryck2e";
+const APPS_SCRIPT_ARCHIVO_URL = "https://script.google.com/macros/s/AKfycbymeXAi6k5RbDV8SS398UQTBMZ-ziG5PVa2PGtrz5aNinmIPGWMrvSzOt9gcGmBVPkp/exec";
+
 export default function CargaRetenciones() {
   const [texto, setTexto] = useState("");
   const [buscando, setBuscando] = useState(false);
@@ -17,6 +22,7 @@ export default function CargaRetenciones() {
   const [estadoSubida, setEstadoSubida] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef(null);
+  const tokenClientRef = useRef(null);
 
   const sheetSrc = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit?usp=sharing&rm=minimal&widget=true`;
   const openUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
@@ -47,47 +53,113 @@ export default function CargaRetenciones() {
     disparar("quitarFiltro");
   };
 
-  const subirArchivo = async (file) => {
+  const avisarProcesamiento = (fileId) => {
+    const url =
+      `${APPS_SCRIPT_ARCHIVO_URL}?accion=procesarArchivo&fileId=${encodeURIComponent(fileId)}` +
+      `&clave=${encodeURIComponent(CLAVE)}&_=${Date.now()}`;
+    setUpdateSrc(url);
+    setTimeout(() => setUpdateSrc(null), 3000);
+  };
+
+  const getTokenClient = () => {
+    if (!window.google || !window.google.accounts) return null;
+    if (!tokenClientRef.current) {
+      tokenClientRef.current = window.google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: DRIVE_SCOPE,
+        callback: () => {}, // se define en cada subida
+      });
+    }
+    return tokenClientRef.current;
+  };
+
+  const subirConToken = (file, accessToken) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const fileContentBase64 = await new Promise((res, rej) => {
+          const reader = new FileReader();
+          reader.onload = () => res(reader.result.split(",")[1]);
+          reader.onerror = rej;
+          reader.readAsDataURL(file);
+        });
+
+        const metadata = { name: file.name, parents: [FOLDER_ID] };
+        const boundary = "cobranzas-" + Date.now();
+        const delimiter = "\r\n--" + boundary + "\r\n";
+        const closeDelim = "\r\n--" + boundary + "--";
+
+        const body =
+          delimiter +
+          "Content-Type: application/json; charset=UTF-8\r\n\r\n" +
+          JSON.stringify(metadata) +
+          delimiter +
+          "Content-Type: " + file.type + "\r\n" +
+          "Content-Transfer-Encoding: base64\r\n\r\n" +
+          fileContentBase64 +
+          closeDelim;
+
+        const res = await fetch(
+          "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id",
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + accessToken,
+              "Content-Type": "multipart/related; boundary=" + boundary,
+            },
+            body,
+          }
+        );
+
+        const json = await res.json();
+        if (!res.ok || !json.id) {
+          reject(new Error((json.error && json.error.message) || "Error al subir a Drive"));
+          return;
+        }
+        resolve(json.id);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
+
+  const subirArchivo = (file) => {
     if (!file) return;
     if (file.type !== "application/pdf" && !file.type.startsWith("image/")) {
       setEstadoSubida("❌ Solo se aceptan PDF o imágenes");
       return;
     }
 
-    setSubiendo(true);
-    setEstadoSubida("Subiendo " + file.name + "…");
-
-    try {
-      const base64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(",")[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-
-      const res = await fetch("/api/subir-retencion", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          filename: file.name,
-          mimeType: file.type,
-          data: base64,
-          clave: CLAVE,
-        }),
-      });
-
-      const json = await res.json();
-      if (json.ok) {
-        setEstadoSubida("✅ Subido — procesando el texto en segundo plano");
-      } else {
-        setEstadoSubida("❌ " + (json.error || "No se pudo subir"));
-      }
-    } catch (err) {
-      setEstadoSubida("❌ No se pudo conectar con el servidor");
-    } finally {
-      setSubiendo(false);
-      setTimeout(() => setEstadoSubida(""), 6000);
+    const tokenClient = getTokenClient();
+    if (!tokenClient) {
+      setEstadoSubida("❌ Todavía está cargando el inicio de sesión de Google, esperá un segundo y probá de nuevo");
+      return;
     }
+
+    setSubiendo(true);
+    setEstadoSubida("Pidiendo autorización de Google…");
+
+    tokenClient.callback = async (resp) => {
+      if (resp.error) {
+        setEstadoSubida("❌ No se autorizó el acceso a Drive");
+        setSubiendo(false);
+        setTimeout(() => setEstadoSubida(""), 6000);
+        return;
+      }
+
+      setEstadoSubida("Subiendo " + file.name + "…");
+      try {
+        const fileId = await subirConToken(file, resp.access_token);
+        avisarProcesamiento(fileId);
+        setEstadoSubida("✅ Subido — procesando el texto en segundo plano");
+      } catch (err) {
+        setEstadoSubida("❌ " + err.message);
+      } finally {
+        setSubiendo(false);
+        setTimeout(() => setEstadoSubida(""), 6000);
+      }
+    };
+
+    tokenClient.requestAccessToken({ prompt: "" });
   };
 
   const handleDrop = (e) => {
@@ -136,7 +208,7 @@ export default function CargaRetenciones() {
           >
             <FileUp size={28} color="var(--muted)" style={{ margin: "0 auto 10px" }} />
             <div className="dropzone-title">Arrastrá el PDF acá, o hacé clic para elegirlo</div>
-            <div className="dropzone-sub">Acepta PDF o imágenes (JPG, PNG)</div>
+            <div className="dropzone-sub">Acepta PDF o imágenes (JPG, PNG) · la primera vez te va a pedir permiso de Google</div>
             <input
               ref={inputRef}
               type="file"
@@ -187,7 +259,7 @@ export default function CargaRetenciones() {
       </div>
 
       {updateSrc && (
-        <iframe src={updateSrc} title="buscador-retenciones" style={{ display: "none" }}></iframe>
+        <iframe src={updateSrc} title="accion-retenciones" style={{ display: "none" }}></iframe>
       )}
     </>
   );
