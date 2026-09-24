@@ -154,3 +154,51 @@ a { color: inherit; }
 
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .spin { animation: spin 1s linear infinite; }
+
+/* --- Fase C: pantallas de Carga de retenciones --- */
+.vista-tabs { display: flex; background: var(--surface, #F5F6F8); border-radius: 10px; padding: 3px; gap: 3px; }
+.vista-tab { border: none; background: transparent; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--muted); font-family: inherit; }
+.vista-tab.activo { background: var(--pink); color: #fff; }
+
+.pantalla-subir { display: flex; flex-direction: column; gap: 16px; }
+.dropzone-grande { margin: 0; padding: 50px; }
+
+.lista-subidas { display: flex; flex-direction: column; gap: 6px; }
+.item-subida { display: flex; justify-content: space-between; align-items: center; background: #fff; border: 1px solid var(--border, #EFE6EB); border-radius: 8px; padding: 8px 12px; font-size: 12px; }
+.item-nombre { font-weight: 600; }
+.item-mensaje { color: var(--muted); }
+.item-error .item-mensaje { color: #B33; }
+.item-listo .item-mensaje { color: var(--green); }
+
+.aviso-revisar { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--pink-blush); border: 1px solid #F3DDE7; border-radius: 10px; padding: 14px 16px; font-size: 13px; flex-wrap: wrap; }
+
+.sub-pantalla { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+
+.grupo-archivo { margin-bottom: 26px; }
+.grupo-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--pink-pastel); }
+.grupo-nombre { font-weight: 700; font-size: 14px; }
+.grupo-count { font-size: 12px; color: var(--muted); }
+
+.grid-tarjetas { display: flex; flex-direction: column; gap: 14px; }
+
+.tarjeta { background: #fff; border: 1px solid var(--border, #EFE6EB); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 60% 40%; }
+@media (max-width: 720px) { .tarjeta { grid-template-columns: 1fr; } }
+
+.tarjeta-visor { background: var(--surface, #F5F6F8); border-right: 1px solid var(--border, #EFE6EB); display: flex; flex-direction: column; }
+.tarjeta-visor-header { padding: 10px 14px; font-size: 12px; font-weight: 600; color: var(--muted); background: #fff; border-bottom: 1px solid var(--border, #EFE6EB); }
+.tarjeta-visor-contenido { min-height: 420px; max-height: 720px; display: flex; align-items: stretch; justify-content: center; }
+.visor-placeholder { margin: auto; text-align: center; padding: 20px; }
+.visor-placeholder-text { font-size: 11px; color: var(--muted); }
+
+.tarjeta-derecha { display: flex; flex-direction: column; }
+.tarjeta-body { padding: 14px; display: flex; flex-direction: column; gap: 9px; flex: 1; }
+.campo label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 3px; }
+.campo select, .campo input { width: 100%; padding: 7px 9px; border: 1px solid var(--border, #EFE6EB); border-radius: 7px; font-size: 13px; font-family: inherit; background: #fff; color: var(--ink); }
+.fila-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fila-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+.tarjeta-footer { padding: 10px 14px; border-top: 1px solid var(--border, #EFE6EB); display: flex; gap: 8px; }
+.btn { flex: 1; padding: 8px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.btn:disabled { opacity: 0.6; cursor: default; }
+.btn-confirmar { background: var(--green); color: #fff; }
+.btn-descartar { background: #F5EAEA; color: #B33; }
