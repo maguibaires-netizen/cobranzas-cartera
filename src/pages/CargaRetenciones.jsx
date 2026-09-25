@@ -220,7 +220,7 @@ function PantallaRevisar() {
     setCargando(true);
     setError("");
     try {
-      const url = `${APPS_SCRIPT_URL}?accion=listarPendientes&clave=${encodeURIComponent(CLAVE)}&_=${Date.now()}`;
+      const url = `/api/listar-pendientes?_=${Date.now()}`;
       const res = await fetch(url);
       const json = await res.json();
       if (!json.ok) throw new Error(json.error || "No se pudo cargar");
